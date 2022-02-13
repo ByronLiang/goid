@@ -1,0 +1,14 @@
+version: "3.7"
+services:
+  leaf:
+    build: bin/leaf
+    image: platform_id_leaf:dev
+    ports:
+      - "8090:8090"
+      - "9090:9090"
+    container_name: "platform-id-leaf-dev"
+    environment:
+      - CONFIG_PATH=/var/platform_id
+      - CONFIG_ENV=dev
+    volumes:
+      - /var/platform_id:/var/platform_id

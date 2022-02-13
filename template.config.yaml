@@ -1,0 +1,18 @@
+db:
+  name: platform_id
+  host: localhost
+  port: 3306
+  username: root
+  password:
+  sql_log: true
+etcd:
+  host: 
+http:
+  address: :8090
+grpc:
+  address: :9090
+leaf:
+  name: leaf
+  debug: true
+  buffer_size: 100
+  percent: 50
