@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"os"
 
 	"github.com/ByronLiang/goid/pkg/db"
 
@@ -18,7 +17,7 @@ import (
 )
 
 func main() {
-	err := config.NewConfig(os.Getenv("CONFIG_ENV"))
+	err := config.NewConfig()
 	if err != nil {
 		log.Fatal(err)
 		return
