@@ -6,6 +6,10 @@ import (
 	"sync"
 	"time"
 
+	"github.com/ByronLiang/goid/pkg/utils"
+
+	"github.com/spf13/viper"
+
 	"github.com/ByronLiang/goid/pkg/db"
 
 	"github.com/ByronLiang/goid/pkg/model"
@@ -33,6 +37,26 @@ func NewLeaf() *leaf {
 		mu:   sync.RWMutex{},
 		data: make(map[int64]*leafNode),
 	}
+}
+
+func (l *leaf) InitLeaf() error {
+	var (
+		domainIds []int64
+		leafList  []*model.Leaf
+		err       error
+	)
+	domainInUse := viper.GetString("DOMAIN_INUSE")
+	if domainInUse != "" {
+		domainIds = utils.SplitParseInt64(domainInUse)
+	}
+	leafList, err = db.LeafDao.GetStatusOnLeaf(db.StatusOn, domainIds...)
+	if err != nil {
+		return err
+	}
+	l.AddLeafNode(leafList,
+		viper.GetInt64("leaf.buffer_size"),
+		viper.GetInt64("leaf.percent"))
+	return nil
 }
 
 func (l *leaf) FakeLeafNode(domain int, size int64) {

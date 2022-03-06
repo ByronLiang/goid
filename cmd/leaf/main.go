@@ -30,14 +30,11 @@ func main() {
 			log.Fatal(err)
 			return
 		}
-		leafList, err := db.LeafDao.GetAll()
+		err = service.Leaf.InitLeaf()
 		if err != nil {
 			log.Fatal(err)
 			return
 		}
-		service.Leaf.AddLeafNode(leafList,
-			viper.GetInt64("leaf.buffer_size"),
-			viper.GetInt64("leaf.percent"))
 	}
 	httpSrv := net.NewDefaultHttpServer(
 		net.HttpAddress(viper.GetString("http.address")),

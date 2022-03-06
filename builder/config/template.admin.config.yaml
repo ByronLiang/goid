@@ -1,0 +1,11 @@
+db:
+  name: platform_id
+  host: localhost
+  port: 3306
+  username: root
+  password:
+  sql_log: true
+http:
+  address: :8090
+admin:
+  name: admin_leaf

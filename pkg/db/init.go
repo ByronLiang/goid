@@ -93,9 +93,15 @@ func deleteCallback(scope *gorm.Scope) {
 	}
 }
 
+func GetMDB() *gorm.DB {
+	return DB.New()
+}
+
 func addExtraSpaceIfExist(str string) string {
 	if str != "" {
 		return " " + str
 	}
 	return ""
 }
+
+type FilterFunc func(db *gorm.DB) *gorm.DB

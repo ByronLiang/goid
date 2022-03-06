@@ -14,8 +14,7 @@ func QueryLeaf(ctx *gin.Context) {
 	number, err := service.Leaf.Get(int64(domainId))
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, response.Error(response.CodeInternalError, err.Error()))
-	} else {
-		ctx.JSON(http.StatusOK, response.Success(number))
 	}
+	ctx.JSON(http.StatusOK, response.Success(number))
 	return
 }

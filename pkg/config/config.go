@@ -6,15 +6,15 @@ import (
 	"github.com/spf13/viper"
 )
 
-const DefaultEnv = "local"
+const DefaultName = "local"
 
 func NewConfig() error {
 	viper.AutomaticEnv()
-	env := viper.GetString("CONFIG_ENV")
-	if env == "" {
-		env = DefaultEnv
+	name := viper.GetString("CONFIG_NAME")
+	if name == "" {
+		name = DefaultName
 	}
-	filename := fmt.Sprintf("%s.config", env)
+	filename := fmt.Sprintf("%s.config", name)
 	viper.SetConfigName(filename)
 	if viper.GetString("CONFIG_PATH") == "" {
 		viper.AddConfigPath(".")

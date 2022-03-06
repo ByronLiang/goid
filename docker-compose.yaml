@@ -9,6 +9,20 @@ services:
     container_name: "platform-id-leaf-dev"
     environment:
       - CONFIG_PATH=/var/platform_id
-      - CONFIG_ENV=dev
+      - CONFIG_NAME=dev.leaf
+      # 配置指定domainId的发号业务
+      - DOMAIN_INUSE=
     volumes:
       - /var/platform_id:/var/platform_id
+  admin:
+    build: bin/admin
+    image: platform_id_admin:dev
+    ports:
+      - "8091:8090"
+      - "9091:9090"
+    container_name: "platform-id-admin-dev"
+      environment:
+        - CONFIG_PATH=/var/platform_id
+        - CONFIG_NAME=dev.admin
+      volumes:
+        - /var/platform_id:/var/platform_id
