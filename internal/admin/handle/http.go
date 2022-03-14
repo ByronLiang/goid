@@ -53,3 +53,18 @@ func GetLeaf(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response.Success(leafs))
 	return
 }
+
+func UpdateLeaf(ctx *gin.Context) {
+	var leaf model.Leaf
+	err := ctx.BindJSON(&leaf)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, response.Error(response.CodeInvalidRequestParams, err.Error()))
+		return
+	}
+	if _, err := db.LeafDao.UpdateStatus(leaf); err != nil {
+		ctx.JSON(http.StatusInternalServerError, response.Error(response.CodeDBError, err.Error()))
+		return
+	}
+	ctx.JSON(http.StatusOK, response.Success(leaf))
+	return
+}

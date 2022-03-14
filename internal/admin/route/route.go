@@ -19,6 +19,11 @@ func InitHttpRouteGroup() []net.ApiGroupPath {
 			Path:    "",
 			Handler: handle.GetLeaf,
 		},
+		{
+			Method:  http.MethodPut,
+			Path:    "",
+			Handler: handle.UpdateLeaf,
+		},
 	}
 	leafRouteGroup := net.ApiGroupPath{
 		Prefix: "/api/admin/leaf",

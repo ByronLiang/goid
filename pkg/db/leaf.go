@@ -63,7 +63,7 @@ func (*leafDao) UpdateMaxId(originMaxId, domainId, currentMaxId int64) int64 {
 	return DB.Exec("update leaf set max_id = ? where domain_id = ? and max_id = ?", currentMaxId, domainId, originMaxId).RowsAffected
 }
 
-func (*leafDao) UpdateStatus(id int64, status int) (int64, error) {
-	mDb := DB.Exec("update leaf set status = ? where id = ?", status, id)
+func (*leafDao) UpdateStatus(leaf model.Leaf) (int64, error) {
+	mDb := DB.Exec("update leaf set status = ? where id = ?", leaf.Status, leaf.Id)
 	return mDb.RowsAffected, mDb.Error
 }
