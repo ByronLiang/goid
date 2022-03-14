@@ -1,0 +1,60 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: leaf
+  namespace: platform
+  labels:
+    app: leaf
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      nodePort: 30090 # 集群外暴露外部端口访问, 若不配置, 则随机端口号. 配置时，不能配置已启用的端口号且默认需要在 30000-32767 范围内
+      port: 8090 # 集群端口号, 主要用于集群内部调用
+      targetPort: 8090 # 配置容器本身暴露端口号: 需要与DockerFile中的EXPOSE; 最终流量经过kube-proxy进入到容器端口
+  selector:
+    app: leaf
+  type: NodePort
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: leaf-stable
+  namespace: platform
+  labels:
+    app: leaf
+    version: stable
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: leaf
+      version: stable
+  template:
+    metadata:
+      labels:
+        app: leaf
+        version: stable
+        cm: stable
+    spec:
+      containers:
+        - name: leaf
+          image: docker.io/platform/leaf:v1.1.0
+          env:
+            - name: CONFIG_PATH
+              value: /var/platform_id
+            - name: CONFIG_NAME
+              value: dev.leaf
+          volumeMounts:
+            - name: config-volume
+              mountPath: /var/platform_id
+          ports:
+            - name: http
+              containerPort: 8090
+              protocol: TCP
+          imagePullPolicy: Never
+      dnsPolicy: ClusterFirst
+      volumes:
+        - name: config-volume
+          configMap:
+            name: leaf-cm
