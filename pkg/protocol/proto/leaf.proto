@@ -1,10 +1,13 @@
 syntax = "proto3";
 
 option go_package="github.com/ByronLiang/goid/pkg/pb";
+import "google/protobuf/empty.proto";
+
 package pb;
 
 service Leaf {
     rpc Query (LeafRequest) returns (LeafResponse) {}
+    rpc Stop (LeafRequest) returns (google.protobuf.Empty) {}
 }
 
 message LeafRequest {

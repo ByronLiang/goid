@@ -49,7 +49,7 @@ func (l *leaf) InitLeaf() error {
 	if domainInUse != "" {
 		domainIds = utils.SplitParseInt64(domainInUse)
 	}
-	leafList, err = db.LeafDao.GetStatusOnLeaf(db.StatusOn, domainIds...)
+	leafList, err = db.LeafDao.GetStatusOnLeaf(model.LeafStatusOn, domainIds...)
 	if err != nil {
 		return err
 	}
@@ -109,6 +109,16 @@ func (l *leaf) Get(domainId int64) (int64, error) {
 	return 0, errors.New("domainId no exist")
 }
 
+func (l *leaf) Stop(domainId int64) error {
+	l.mu.RLock()
+	defer l.mu.RUnlock()
+	if node, ok := l.data[domainId]; ok {
+		node.stop <- struct{}{}
+		return nil
+	}
+	return errors.New("domainId no exist")
+}
+
 func (ln *leafNode) FakeWatch() {
 	go func() {
 		for {
@@ -116,7 +126,6 @@ func (ln *leafNode) FakeWatch() {
 			case ln.buffer <- ln.Current:
 				ln.Current++
 			case <-ln.stop:
-				// 回收未使用号段
 				close(ln.buffer)
 				return
 			default:

@@ -1,5 +1,10 @@
 package model
 
+const (
+	LeafStatusOn  = 1
+	LeafStatusOff = 2
+)
+
 type Leaf struct {
 	Id       int64 `json:"id"`
 	DomainId int64 `json:"domain_id,omitempty"`

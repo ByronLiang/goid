@@ -65,6 +65,9 @@ func UpdateLeaf(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, response.Error(response.CodeDBError, err.Error()))
 		return
 	}
+	if leaf.Status == model.LeafStatusOff {
+		// rpc 请求
+	}
 	ctx.JSON(http.StatusOK, response.Success(leaf))
 	return
 }

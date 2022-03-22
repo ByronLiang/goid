@@ -5,11 +5,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-const (
-	StatusOn  = 1
-	StatusOff = 2
-)
-
 var LeafDao = &leafDao{}
 
 type leafDao struct {

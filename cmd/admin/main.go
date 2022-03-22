@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 
+	"github.com/ByronLiang/goid/pkg/rpc"
+
 	"github.com/ByronLiang/goid/pkg/db"
 
 	"github.com/ByronLiang/goid/internal/admin/route"
@@ -23,6 +25,8 @@ func main() {
 		log.Fatal(err)
 		return
 	}
+	// init gRPC leaf client
+	rpc.InitLeafCli("")
 	httpSrv := net.NewDefaultHttpServer(
 		net.HttpAddress(viper.GetString("http.address")),
 		net.HttpRouteGroup(route.InitHttpRouteGroup()),
