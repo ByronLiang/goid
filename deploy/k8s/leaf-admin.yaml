@@ -1,54 +1,50 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: leaf
+  name: leaf-admin
   namespace: platform
   labels:
-    app: leaf
+    app: leaf-admin
 spec:
   ports:
     - name: http
       protocol: TCP
-      nodePort: 30090 # 集群外暴露外部端口访问, 若不配置, 则随机端口号. 配置时，不能配置已启用的端口号且默认需要在 30000-32767 范围内
+      nodePort: 30091 # 集群外暴露外部端口访问, 若不配置, 则随机端口号. 配置时，不能配置已启用的端口号且默认需要在 30000-32767 范围内
       port: 8090 # 集群端口号, 主要用于集群内部调用
       targetPort: 8090 # 配置容器本身暴露端口号: 需要与DockerFile中的EXPOSE; 最终流量经过kube-proxy进入到容器端口
-    - name: rpc
-      protocol: TCP
-      port: 9090
-      targetPort: 9090
   selector:
-    app: leaf
+    app: leaf-admin
   type: NodePort
 ---
 kind: Deployment
 apiVersion: apps/v1
 metadata:
-  name: leaf-stable
+  name: leaf-admin-stable
   namespace: platform
   labels:
-    app: leaf
+    app: leaf-admin
     version: stable
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: leaf
+      app: leaf-admin
       version: stable
   template:
     metadata:
       labels:
-        app: leaf
+        app: leaf-admin
         version: stable
         cm: stable
     spec:
       containers:
-        - name: leaf
-          image: docker.io/platform/leaf:v1.1.0
+        - name: leaf-admin
+          image: docker.io/platform/admin/leaf:v1.0.0
           env:
             - name: CONFIG_PATH
               value: /var/platform_id
             - name: CONFIG_NAME
-              value: dev.leaf
+              value: dev.leaf_admin
           volumeMounts:
             - name: config-volume
               mountPath: /var/platform_id
@@ -56,12 +52,9 @@ spec:
             - name: http
               containerPort: 8090
               protocol: TCP
-            - name: rpc
-              containerPort: 9090
-              protocol: TCP
           imagePullPolicy: Never
       dnsPolicy: ClusterFirst
       volumes:
         - name: config-volume
           configMap:
-            name: leaf-cm
+            name: leaf-admin-cm

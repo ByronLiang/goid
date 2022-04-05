@@ -9,3 +9,5 @@ http:
   address: :8090
 admin:
   name: admin_leaf
+rpc:
+  leaf: leaf:9090
