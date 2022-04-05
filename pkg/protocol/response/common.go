@@ -22,6 +22,7 @@ func Error(errCode ErrorCode, errMsg string) RespInfo {
 const (
 	CodeOK = 0
 	// 服务器的错误
+	CodeRPCError      = 9
 	CodeInternalError = 10
 	CodeDBError       = 11
 

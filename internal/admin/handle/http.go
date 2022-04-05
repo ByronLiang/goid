@@ -1,8 +1,12 @@
 package handle
 
 import (
+	"context"
 	"net/http"
 	"strconv"
+
+	"github.com/ByronLiang/goid/pkg/pb"
+	"github.com/ByronLiang/goid/pkg/rpc"
 
 	"github.com/ByronLiang/goid/pkg/utils"
 
@@ -67,6 +71,11 @@ func UpdateLeaf(ctx *gin.Context) {
 	}
 	if leaf.Status == model.LeafStatusOff {
 		// rpc 请求
+		_, err := rpc.Leaf.Cli.Stop(context.Background(), &pb.LeafRequest{Domain: leaf.DomainId})
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, response.Error(response.CodeRPCError, err.Error()))
+			return
+		}
 	}
 	ctx.JSON(http.StatusOK, response.Success(leaf))
 	return

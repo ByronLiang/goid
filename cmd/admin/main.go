@@ -17,16 +17,20 @@ import (
 func main() {
 	err := config.NewConfig()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("init config", err)
 		return
 	}
 	err = db.InitDb()
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("init db", err)
 		return
 	}
 	// init gRPC leaf client
-	rpc.InitLeafCli("")
+	err = rpc.InitLeafCli(viper.GetString("rpc.leaf"))
+	if err != nil {
+		log.Fatal("rpc client for leaf exception", err)
+		return
+	}
 	httpSrv := net.NewDefaultHttpServer(
 		net.HttpAddress(viper.GetString("http.address")),
 		net.HttpRouteGroup(route.InitHttpRouteGroup()),
